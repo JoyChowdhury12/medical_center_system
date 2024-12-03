@@ -126,6 +126,7 @@ int loginPatient()
 int adminLogin()
 {
     system("cls");
+    
     char email[50], password[20];
     printHeader("=== Admin Login ===");
     printf(YELLOW "Enter Email: " RESET);
@@ -133,19 +134,14 @@ int adminLogin()
     printf(YELLOW "Enter Password: " RESET);
     scanf(" %[^\n]", password);
 
-    if (strcmp(adminEmail, email) == 0 && strcmp(adminPass, password) == 0)
-    {
-        printf(GREEN "Login successful! Welcome Admin, %s\n" RESET);
-    }
-    return 1;
-
+    if(strcmp(adminEmail, email) == 0 && strcmp(adminPass, password) == 0) return 1;
+    
     return 0;
 }
 
 // Function to update patient information
 void updatePatientInfo(int patientId)
 {
-    system("cls");
     FILE *file = fopen(PATIENT_FILE, "r+");
     if (!file)
     {
@@ -192,7 +188,6 @@ void updatePatientInfo(int patientId)
 // Function to view patient details
 void viewPatientDetails(int patientId)
 {
-    system("cls");
     FILE *file = fopen(PATIENT_FILE, "r");
     if (!file)
     {
@@ -227,8 +222,6 @@ void viewPatientDetails(int patientId)
 // Function to schedule an appointment
 void scheduleAppointment(int patientId)
 {
-    system("cls");
-
     const char *doctors[] = {
         "Dr. Mahbubur Rahman", "Dr. Masud", "Dr. Farjana Begum", "Dr. Tanvir Rahman",
         "Dr. Toha Islam", "Dr. Tonu Chowdhury", "Dr. Amatullah Amin", "Dr. Yalahi Rahman",
@@ -282,8 +275,6 @@ void scheduleAppointment(int patientId)
 // Function to view appointments
 void viewAppointments(int patientId)
 {
-    system("cls");
-
     FILE *file = fopen(APPOINTMENT_FILE, "r");
     if (!file)
     {
@@ -318,7 +309,6 @@ void viewAppointments(int patientId)
 // Function to generate a payment receipt
 void generateReceipt(int appointmentId)
 {
-    system("cls");
     printHeader("=== Payment Receipt ===");
     printf(YELLOW "Appointment ID: %d\n" RESET, appointmentId);
     printf(YELLOW "Amount to be paid: 500 BDT\n" RESET); // Example static amount
@@ -327,7 +317,6 @@ void generateReceipt(int appointmentId)
 // Function to handle payment gateway
 void paymentGateway(int appointmentId)
 {
-    system("cls");
     int choice;
     float amount = 500.0; // Amount from generateReceipt
 
@@ -370,39 +359,32 @@ void paymentGateway(int appointmentId)
         }
     }
 }
-void viewAllPatientRecords()
-{
-    system("cls");
+void viewAllPatientRecords() {
     FILE *file = fopen(PATIENT_FILE, "r");
-    if (!file)
-    {
+    if (!file) {
         printf(RED "Error opening patient file!\n" RESET);
         return;
     }
 
     printHeader("=== All Patient Records ===");
     Patient patient;
-    while (fread(&patient, sizeof(Patient), 1, file))
-    {
+    while (fread(&patient, sizeof(Patient), 1, file)) {
         printf(YELLOW "ID: %d\nName: %s\nEmail: %s\n\n" RESET, patient.id, patient.name, patient.email);
     }
 
     fclose(file);
 }
 
-void viewAllAppointmentDetails()
-{
+void viewAllAppointmentDetails() {
     FILE *file = fopen(APPOINTMENT_FILE, "r");
-    if (!file)
-    {
+    if (!file) {
         printf(RED "Error opening appointment file!\n" RESET);
         return;
     }
 
     printHeader("=== All Appointment Details ===");
     Appointment appointment;
-    while (fread(&appointment, sizeof(Appointment), 1, file))
-    {
+    while (fread(&appointment, sizeof(Appointment), 1, file)) {
         printf(YELLOW "Appointment ID: %d\nPatient ID: %d\nDoctor's Name: %s\nDate: %s\nTime: %s\n\n" RESET,
                appointment.appointmentId, appointment.patientId, appointment.doctorName, appointment.date, appointment.time);
     }
@@ -413,7 +395,6 @@ void viewAllAppointmentDetails()
 // Patient menu
 void patientMenu(int patientId)
 {
-    system("cls");
     int choice;
     while (1)
     {
@@ -443,7 +424,7 @@ void patientMenu(int patientId)
             viewAppointments(patientId);
             break;
         case 5:
-            generateReceipt(patientId);
+            generateReceipt(patientId); // You can modify the appointmentId logic if necessary
             break;
         case 6:
             paymentGateway(patientId);
@@ -457,11 +438,11 @@ void patientMenu(int patientId)
     }
 }
 
-void adminMenu()
-{
+
+void adminMenu() {
+    system("cls");
     int choice;
-    while (1)
-    {
+    while (1) {
         printHeader("=== Admin Menu ===");
         printf("1. View All Patient Records\n");
         printf("2. View All Appointment Details\n");
@@ -469,19 +450,18 @@ void adminMenu()
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
-        switch (choice)
-        {
-        case 1:
-            viewAllPatientRecords();
-            break;
-        case 2:
-            viewAllAppointmentDetails();
-            break;
-        case 3:
-            printf(GREEN "Logged out successfully!\n" RESET);
-            return;
-        default:
-            printf(RED "Invalid choice. Please try again.\n" RESET);
+        switch (choice) {
+            case 1:
+                viewAllPatientRecords();
+                break;
+            case 2:
+                viewAllAppointmentDetails();
+                break;
+            case 3:
+                printf(GREEN "Logged out successfully!\n" RESET);
+                return;
+            default:
+                printf(RED "Invalid choice. Please try again.\n" RESET);
         }
     }
 }
@@ -490,8 +470,7 @@ void adminMenu()
 void mainMenu(int adminSignal)
 {
     system("cls");
-    if (adminSignal == 1)
-        printf(RED "Invalid admin credentials. Please try again.\n" RESET);
+    if(adminSignal == 1) printf(RED "Invalid admin credentials. Please try again.\n" RESET);
     int choice;
     while (1)
     {
@@ -520,10 +499,8 @@ void mainMenu(int adminSignal)
         case 3:
         {
             int check = adminLogin();
-            if (check > 0)
-                adminMenu();
-            else
-            {
+            if(check > 0) adminMenu();
+            else {
                 mainMenu(1);
             }
             break;
