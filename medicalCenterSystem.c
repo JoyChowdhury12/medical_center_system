@@ -40,6 +40,7 @@ const char *APPOINTMENT_FILE = "appointments.txt";
 // Function prototypes
 void registerPatient();
 int loginPatient();
+int adminLogin();
 void updatePatientInfo(int patientId);
 void viewPatientDetails(int patientId);
 void scheduleAppointment(int patientId);
@@ -64,7 +65,7 @@ void printHeader(const char *title)
 void registerPatient()
 {
     system("cls");
-    FILE *file = fopen(PATIENT_FILE, "a");
+    FILE *file = fopen("PATIENT_FILE", "a");
     if (!file)
     {
         printf(RED "Error opening file!\n" RESET);
@@ -101,7 +102,7 @@ int loginPatient()
     }
 
     char email[50], password[20];
-    printHeader("=== Login ===");
+    printHeader("=== Patient Login ===");
     printf(YELLOW "Enter Email: " RESET);
     scanf(" %[^\n]", email);
     printf(YELLOW "Enter Password: " RESET);
@@ -276,7 +277,7 @@ void scheduleAppointment(int patientId)
     fwrite(&appointment, sizeof(Appointment), 1, file);
     fclose(file);
 
-    printf(GREEN "Appointment scheduled successfully with Dr. %s!\n" RESET, appointment.doctorName);
+    printf(GREEN "Appointment scheduled successfully with %s!\n" RESET, appointment.doctorName);
 }
 
 // Function to view appointments
